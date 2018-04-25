@@ -116,7 +116,7 @@ class CourseRecord(models.Model):
 class StudyRecord(models.Model):
     '''学习记录表'''
     #一节课对应多个学生
-    course_record = models.ForeignKey('CourseRecord','课程')
+    course_record = models.ForeignKey('CourseRecord',verbose_name='课程')
     #一个学生有多个上课记录
     student = models.ForeignKey('Student',verbose_name='学生',on_delete=models.CASCADE)
     score_choices = ((100,'A+'),
