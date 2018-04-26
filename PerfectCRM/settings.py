@@ -132,3 +132,9 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'statics'),
+)
+
+#登录才能访问的页面，如果没登录直接跳转到login界面
+LOGIN_URL = '/login/'

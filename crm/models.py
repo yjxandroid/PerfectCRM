@@ -8,12 +8,17 @@ from django.contrib.auth.models import User
 class Role(models.Model):
     '''角色表'''
     name = models.CharField(max_length=64,unique=True)    #不能重
+    #一个角色可以访问多个菜单，一个菜单可以被多个角色访问
+    menus = models.ManyToManyField('Menus',blank=True,verbose_name='动态菜单')
+
+    def __str__(self):
+        return self.name
 
 
 class UserProfile(models.Model):
     '''用户信息表'''
     #关联django自带的User，可以自己扩展字段
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
     name = models.CharField('姓名',max_length=64)
     #一个用户可以有多个角色，一个角色可以对应多个用户
     role = models.ManyToManyField(Role,blank=True,null=True)
@@ -116,7 +121,7 @@ class CourseRecord(models.Model):
 class StudyRecord(models.Model):
     '''学习记录表'''
     #一节课对应多个学生
-    course_record = models.ForeignKey('CourseRecord',verbose_name='课程')
+    course_record = models.ForeignKey('CourseRecord',verbose_name='课程',on_delete=models.CASCADE)
     #一个学生有多个上课记录
     student = models.ForeignKey('Student',verbose_name='学生',on_delete=models.CASCADE)
     score_choices = ((100,'A+'),
@@ -152,3 +157,20 @@ class Branch(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Menus(models.Model):
+    '''动态菜单'''
+    name = models.CharField(max_length=64)
+    #绝对url和动态url
+    url_type_choices = ((0,'absolute'),(1,'dynamic'))
+    url_type = models.SmallIntegerField(choices=url_type_choices,default=0)
+    url_name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = ('name','url_name')
+
+

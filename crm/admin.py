@@ -12,5 +12,7 @@ admin.site.register(models.ClassList)
 admin.site.register(models.CourseRecord)
 admin.site.register(models.StudyRecord)
 admin.site.register(models.Branch)
+admin.site.register(models.Menus)
+admin.site.register(models.UserProfile)
 
 
