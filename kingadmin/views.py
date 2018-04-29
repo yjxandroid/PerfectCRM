@@ -9,11 +9,20 @@ from kingadmin import app_setup
 app_setup.kingadmin_auto_discover()
 
 from kingadmin.sites import site
-print('site',site.enable_admins)
+# print('site',site.enable_admins)
 
 def app_index(request):
 
     return render(request,'kingadmin/app_index.html',{'site':site})
+
+def get_filter_result(request,querysets):
+    filter_conditions = {}
+    #获取过滤的字段
+    for key,val in request.GET.items():
+        if val:
+            filter_conditions[key] = val
+    #返回过滤后的数据
+    return querysets.filter(**filter_conditions),filter_conditions
 
 
 @login_required
@@ -22,8 +31,9 @@ def table_obj_list(request, app_name, model_name):
     #拿到admin_class后，通过它找到拿到model
     admin_class = site.enable_admins[app_name][model_name]
     querysets = admin_class.model.objects.all()
-
-    return render(request, 'kingadmin/table_obj_list.html',{'querysets':querysets})
+    querysets,filter_conditions = get_filter_result(request,querysets)
+    admin_class.filter_conditions = filter_conditions
+    return render(request, 'kingadmin/table_obj_list.html',{'querysets':querysets,'admin_class':admin_class})
 
 
 def acc_login(request):

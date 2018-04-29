@@ -8,6 +8,6 @@ def kingadmin_auto_discover():
             #去每个app下面执行kingadmin.py文件
             mod = __import__('%s.kingadmin'%app_name)
             #打印每个app已注册的model名字
-            print(mod.kingadmin)
+            # print(mod.kingadmin)
         except ImportError:
             pass
