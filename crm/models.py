@@ -31,7 +31,7 @@ class CustomerInfo(models.Model):
     '''客户信息表'''
     name = models.CharField('姓名',max_length=64,default=None)
     contact_type_choices = ((0,'qq'),(1,'微信'),(2,'手机'))
-    contact_type = models.SmallIntegerField(choices=contact_type_choices,default=0)
+    contact_type = models.SmallIntegerField(choices=contact_type_choices,default=0,verbose_name='联系方式类型')
     contact = models.CharField('联系方式',max_length=64,unique=True)
     source_choices = ((0,'qq群'),(1,'51CTO'),(2,'百度推广'),(3,'知乎'),(4,'转介绍'),(5,'其它'),)
     source = models.SmallIntegerField('客户来源',choices=source_choices)
@@ -39,11 +39,16 @@ class CustomerInfo(models.Model):
     referral_from = models.ForeignKey('self',blank=True,null=True,verbose_name='转介绍',on_delete=models.CASCADE)
     #可以咨询多个课程
     consult_courses = models.ManyToManyField('Course',verbose_name='咨询课程')
-    consult_content = models.TextField('咨询内容',)
+    consult_content = models.TextField(verbose_name='咨询内容',)
     status_choices = ((0,'未报名'),(1,'已报名'),(2,'已经退学'))
     status = models.SmallIntegerField('客户状态',choices=status_choices)
     consultant = models.ForeignKey('UserProfile',verbose_name='课程顾问',on_delete=models.CASCADE)
     date = models.DateField('创建的时间',auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
 
 
 class Student(models.Model):
