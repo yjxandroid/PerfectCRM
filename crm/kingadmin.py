@@ -8,7 +8,7 @@ from kingadmin.admin_base import BaseKingAdmin
 
 #注册model
 class CustomerAdmin(BaseKingAdmin):
-    list_display = ['name','source','contact_type','contact','consultant','consult_content','status','date']
+    list_display = ['id','name','source','contact_type','contact','consultant','consult_content','status','date']
     list_filter = ['source','consultant','status','date']
     search_fields = ['contact','consultant__name']
 
