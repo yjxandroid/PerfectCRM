@@ -12,6 +12,7 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ['contact','consultant__name']
     #只读字段,不能修改
     readonly_fields = ['contact','status']
+    filter_horizontal = ['consult_courses']
 
 admin.site.register(models.Role)
 admin.site.register(models.CustomerInfo,CustomerAdmin)

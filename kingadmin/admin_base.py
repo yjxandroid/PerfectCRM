@@ -6,4 +6,5 @@ class BaseKingAdmin(object):
     list_filter = []
     search_fields = []
     #只读
-    # readonly_fields = []
+    readonly_fields = []
+    filter_horizontal = []
