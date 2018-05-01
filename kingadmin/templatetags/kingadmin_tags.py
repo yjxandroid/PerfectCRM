@@ -64,7 +64,8 @@ def build_table_row(obj,admin_class):
 
     ele = ''
     if admin_class.list_display:
-        for column_name in admin_class.list_display:
+        #添加获取下标
+        for index,column_name in enumerate(admin_class.list_display):
             #获取所有字段对象
             column_obj = admin_class.model._meta.get_field(column_name)
             #字段对象的choices方法，如果有choices，则get_xxx_display
@@ -73,11 +74,13 @@ def build_table_row(obj,admin_class):
             else:
                 column_data = getattr(obj,column_name)
             td_ele = "<td>%s</td>" % column_data
+            #如果列的下标为0，就添加一个a标签，点击跳到修改页面
+            if index == 0:
+                td_ele = "<td><a href='%s/change/'>%s</a></td>"%(obj.id,column_data)
             ele += td_ele
     else:
-        td_ele = "<td>%s</td>"%obj
+        td_ele = "<td><a href='%s/change/'>%s</a></td>"%(obj.id,obj)
         ele += td_ele
-
     return mark_safe(ele)
 
 @register.simple_tag

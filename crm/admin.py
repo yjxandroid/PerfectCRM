@@ -10,7 +10,8 @@ class CustomerAdmin(admin.ModelAdmin):
     list_filter = ['source','consultant','status','date']
     #搜索，consultant是外键，必须加“__字段名”
     search_fields = ['contact','consultant__name']
-
+    #只读字段,不能修改
+    readonly_fields = ['contact','status']
 
 admin.site.register(models.Role)
 admin.site.register(models.CustomerInfo,CustomerAdmin)

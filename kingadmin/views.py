@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.db.models import Q
+from kingadmin import form_handle
 
 from kingadmin import app_setup
 #程序已启动就自动执行
@@ -67,7 +68,7 @@ def table_obj_list(request, app_name, model_name):
     '''取出指定model里的数据返回给前端'''
     #拿到admin_class后，通过它找到拿到model
     admin_class = site.enable_admins[app_name][model_name]
-    querysets = admin_class.model.objects.all()
+    querysets = admin_class.model.objects.all().order_by('-id')
     #过滤
     querysets,filter_conditions = get_filter_result(request,querysets)
     admin_class.filter_conditions = filter_conditions
@@ -92,6 +93,45 @@ def table_obj_list(request, app_name, model_name):
     return render(request, 'kingadmin/table_obj_list.html',{'querysets':querysets,
                                                             'admin_class':admin_class,
                                                             'sorted_column':sorted_column})
+@login_required
+def table_obj_change(request,app_name,model_name,obj_id):
+    '''kingadmin 数据修改页'''
+
+    admin_class = site.enable_admins[app_name][model_name]
+    model_form = form_handle.create_dynamic_model_form(admin_class)
+    #让表单变成是修改的表单
+    obj = admin_class.model.objects.get(id=obj_id)
+
+    #修改
+    if request.method == 'GET':
+        form_obj = model_form(instance=obj)
+
+    elif request.method == 'POST':
+        form_obj = model_form(instance=obj,data=request.POST)
+        if form_obj.is_valid():
+            form_obj.save()
+            #修改后跳转到的页面
+            return redirect("/kingadmin/%s/%s/"%(app_name,model_name))
+
+    return render(request,'kingadmin/table_obj_change.html',locals())
+
+
+@login_required
+def table_obj_add(request,app_name,model_name):
+    '''kingadmin 数据添加'''
+
+    admin_class = site.enable_admins[app_name][model_name]
+    model_form = form_handle.create_dynamic_model_form(admin_class)
+
+    if request.method == 'GET':
+        form_obj = model_form()
+    elif request.method == 'POST':
+        form_obj = model_form(data=request.POST)
+        if form_obj.is_valid():
+            form_obj.save()
+            #跳转到的页面
+            return redirect("/kingadmin/%s/%s/"%(app_name,model_name))
+    return render(request, 'kingadmin/table_obj_add.html', locals())
 
 
 def acc_login(request):

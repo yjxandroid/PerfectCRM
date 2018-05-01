@@ -53,20 +53,6 @@
 
         <div class="pagination">
             {% render_paginator querysets admin_class sorted_column %}
-
-            <span class="step-links">
-                {% if querysets.has_previous %}
-                    <a href="?page={{ querysets.previous_page_number }}">上一页</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ querysets.number }} of {{ querysets.paginator.num_pages }}.
-                </span>
-
-                {% if querysets.has_next %}
-                    <a href="?page={{ querysets.next_page_number }}">下一页</a>
-                {% endif %}
-            </span>
         </div>
 </div>
 
