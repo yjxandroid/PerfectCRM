@@ -81,7 +81,7 @@ def table_obj_list(request, app_name, model_name):
     querysets,sorted_column = get_orderby_result(request,querysets,admin_class)
 
     #分页
-    paginator = Paginator(querysets, 3)
+    paginator = Paginator(querysets,admin_class.list_per_page)
     page = request.GET.get('page')
     try:
         querysets = paginator.page(page)
@@ -132,6 +132,17 @@ def table_obj_add(request,app_name,model_name):
             #跳转到的页面
             return redirect("/kingadmin/%s/%s/"%(app_name,model_name))
     return render(request, 'kingadmin/table_obj_add.html', locals())
+
+def table_obj_delete(request,app_name,model_name,obj_id):
+    '''删除功能'''
+    admin_class = site.enable_admins[app_name][model_name]
+    obj = admin_class.model.objects.get(id=obj_id)
+    if request.method == 'POST':
+        obj.delete()
+        return redirect("/kingadmin/%s/%s/" % (app_name, model_name))
+
+    return render(request,'kingadmin/table_obj_delete.html',locals())
+
 
 
 def acc_login(request):

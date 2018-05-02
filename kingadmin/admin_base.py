@@ -8,3 +8,4 @@ class BaseKingAdmin(object):
     #只读
     readonly_fields = []
     filter_horizontal = []
+    list_per_page = 5

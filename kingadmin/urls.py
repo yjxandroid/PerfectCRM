@@ -14,4 +14,6 @@ urlpatterns = [
     url(r'^(\w+)/(\w+)/(\d+)/change/$', views.table_obj_change,name='table_obj_change'),
     #增加
     url(r'^(\w+)/(\w+)/add/$', views.table_obj_add,name='table_obj_add'),
+    #删除
+    url(r'^(\w+)/(\w+)/(\d+)/delete/$', views.table_obj_delete,name='obj_delete'),
 ]
